@@ -47,6 +47,14 @@ defmodule Nostrum.Token do
     end
   end
 
+  @doc """
+  A workaround when the application may or may not actually need nostrum. Don't
+  raise error.
+  """
+  def check_token(), do: check_token(Application.get_env(:nostrum, :token))
+  def check_token(nil), do: {:error, nil}
+  def check_token(token), do: {:ok, check_token!(token)}
+
   defp decode_user_id!(user_id) do
     _user_id =
       user_id
