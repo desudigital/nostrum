@@ -32,10 +32,17 @@ defmodule Nostrum.Application do
 
   @doc false
   def setup_ets_tables do
-    :ets.new(:gateway_url, [:set, :public, :named_table])
-    :ets.new(:unavailable_guilds, [:set, :public, :named_table])
-    :ets.new(:guild_shard_map, [:set, :public, :named_table])
-    :ets.new(:channel_guild_map, [:set, :public, :named_table])
+    create_table(:gateway_url, [:set, :public, :named_table])
+    create_table(:unavailable_guilds, [:set, :public, :named_table])
+    create_table(:guild_shard_map, [:set, :public, :named_table])
+    create_table(:channel_guild_map, [:set, :public, :named_table])
+  end
+
+  # https://stackoverflow.com/questions/52094933/how-to-check-if-a-named-table-exists-or-not-in-ets-erlang-elixir
+  defp create_table(name, opts) do
+    if Enum.member?(:ets.all(), name) == false do
+      :ets.new(name, opts)
+    end
   end
 
   defp check_executables do
